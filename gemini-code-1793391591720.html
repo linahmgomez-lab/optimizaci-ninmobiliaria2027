@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Lina Rachez — Optimización visual inmobiliaria con IA. Realce fotográfico, amoblado virtual y aceleración de ventas para brokers.">
+  <title>Lina Rachez — Optimización Visual Inmobiliaria con IA</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-dark: #0a0a0f;
+      --bg-card: #13121d;
+      --white: #ffffff;
+      --muted: #a3a1b0;
+      --accent: #ff5500;
+      --accent-light: #ff8c00;
+      --accent-glow: rgba(255, 85, 0, 0.35);
+      --green: #25d366;
+      --green-dark: #128c7e;
+      --border-line: rgba(255, 255, 255, 0.08);
+      --border-accent: rgba(255, 85, 0, 0.35);
+      --shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
+      --max: 1200px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg-dark); color: #fff; line-height: 1.6; overflow-x: hidden; }
+    a { color: inherit; text-decoration: none; }
+    button, select, input { font: inherit; }
+    .container { width: min(var(--max), calc(100% - 40px)); margin: auto; }
+
+    /* Topbar */
+    .topbar { position: fixed; z-index: 50; top: 0; left: 0; right: 0; height: 75px; display: flex; align-items: center; justify-content: space-between; padding: 0 30px; background: rgba(10, 10, 15, 0.95); backdrop-filter: blur(16px); border-bottom: 1px solid var(--border-line); }
+    .brand { font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 700; color: #fff; letter-spacing: .08em; }
+    .brand span { color: var(--accent-light); }
+    .brand-sub { display: block; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 8px; letter-spacing: .2em; color: var(--muted); margin-top: 2px; }
+    .nav { display: flex; align-items: center; gap: 24px; }
+    .nav a { font-size: 13px; color: #d0cdd9; transition: .2s; }
+    .nav a:hover { color: var(--accent-light); }
+
+    .currency-pill { display: inline-flex; background: #1c1a2c; padding: 3px; border-radius: 20px; border: 1px solid var(--border-line); }
+    .currency-btn { background: none; border: none; color: #9f9cb0; padding: 6px 14px; border-radius: 16px; font-size: 12px; font-weight: 700; cursor: pointer; transition: all .2s ease; }
+    .currency-btn.active { background: var(--accent); color: #fff; }
+
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; border-radius: 12px; padding: 12px 20px; font-size: 13px; font-weight: 700; cursor: pointer; transition: transform .2s, box-shadow .2s; border: none; }
+    .btn:hover { transform: translateY(-2px); }
+    .btn-primary { background: linear-gradient(135deg, var(--accent), var(--accent-light)); color: #fff; box-shadow: 0 10px 24px var(--accent-glow); }
+    .btn-secondary { background: transparent; color: #fff; border: 1px solid rgba(255, 140, 0, 0.7); }
+
+    /* Hero */
+    .hero { min-height: 90vh; background: radial-gradient(circle at 80% 25%, rgba(255, 85, 0, 0.2), transparent 45%), var(--bg-dark); color: #fff; display: flex; align-items: center; padding: 120px 0 70px; }
+    .hero-inner { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 40px; align-items: center; }
+    .hero-text-col { display: flex; flex-direction: column; }
+    .hero-card-col { display: flex; flex-direction: column; }
+
+    .badge { display: inline-block; padding: 6px 14px; border-radius: 20px; background: rgba(255, 85, 0, 0.12); border: 1px solid var(--border-accent); color: var(--accent-light); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; margin-bottom: 16px; width: fit-content; }
+    .hero h1 { font-family: 'Syne', sans-serif; font-size: clamp(30px, 3.8vw, 50px); line-height: 1.15; margin-bottom: 18px; font-weight: 800; }
+    .hero h1 span { color: var(--accent-light); }
+    .hero p { font-size: 15px; color: #c4c1ce; line-height: 1.7; margin-bottom: 25px; max-width: 580px; }
+    .hero-actions { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 30px; }
+    .metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; border-top: 1px solid var(--border-line); padding-top: 20px; }
+    .metric strong { display: block; font-family: 'Syne', sans-serif; font-size: 22px; color: #fff; }
+    .metric span { font-size: 11px; color: var(--muted); }
+
+    /* Comparadores Antes y Después */
+    .hero-card { background: var(--bg-card); border: 1px solid var(--border-accent); border-radius: 20px; padding: 16px; box-shadow: var(--shadow); }
+    .before-after-wrapper { position: relative; width: 100%; aspect-ratio: 4/3; border-radius: 12px; overflow: hidden; user-select: none; background: #1a1926; cursor: ew-resize; }
+    .before-after-wrapper img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
+    .img-after { clip-path: polygon(0 0, 50% 0, 50% 100%, 0 100%); }
+    .slider-handle { position: absolute; top: 0; bottom: 0; left: 50%; width: 4px; background: #ff8c00; cursor: ew-resize; z-index: 10; box-shadow: 0 0 12px rgba(255, 140, 0, 0.8); pointer-events: none; }
+    .slider-circle { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 34px; height: 34px; background: #ff5500; border: 2px solid #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; color: #fff; box-shadow: 0 4px 10px rgba(0,0,0,0.5); pointer-events: none; }
+    .tag-hint { position: absolute; bottom: 12px; padding: 6px 12px; border-radius: 6px; font-size: 11px; font-weight: 700; color: #fff; z-index: 5; pointer-events: none; }
+    .tag-b { left: 12px; background: rgba(0,0,0,0.7); }
+    .tag-a { right: 12px; background: var(--accent); }
+
+    /* Galería */
+    .gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 20px; }
+    .gallery-card { background: var(--bg-card); border: 1px solid var(--border-line); border-radius: 18px; padding: 14px; transition: transform .2s, border-color .2s; }
+    .gallery-card:hover { transform: translateY(-4px); border-color: var(--border-accent); box-shadow: 0 10px 30px rgba(0,0,0,0.4); }
+    .gallery-card .before-after-wrapper { aspect-ratio: 4/3; margin-bottom: 14px; }
+    .gallery-info h4 { font-family: 'Syne', sans-serif; font-size: 16px; color: #fff; margin-bottom: 4px; }
+    .gallery-info p { font-size: 12px; color: var(--muted); line-height: 1.5; }
+
+    /* Secciones */
+    .section { padding: 80px 0; border-top: 1px solid var(--border-line); }
+    .section-head { text-align: center; max-width: 680px; margin: 0 auto 40px; }
+    .section-label { font-family: 'Syne', sans-serif; font-size: 11px; letter-spacing: .18em; color: var(--accent-light); font-weight: 700; text-transform: uppercase; margin-bottom: 10px; }
+    .section h2 { font-family: 'Syne', sans-serif; font-size: clamp(26px, 3.2vw, 40px); line-height: 1.2; font-weight: 700; margin-bottom: 12px; color: #fff; }
+    .section-head p { font-size: 14px; color: var(--muted); }
+
+    /* Comparativa vs Fotógrafo Tradicional */
+    .vs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    .vs-card { background: var(--bg-card); border-radius: 20px; padding: 30px; border: 1px solid var(--border-line); }
+    .vs-card.winner { border-color: var(--accent); background: linear-gradient(180deg, #161424, #100f1a); box-shadow: 0 10px 30px rgba(255,85,0,0.15); }
+    .vs-title { font-family: 'Syne'; font-size: 18px; margin-bottom: 16px; color: #fff; }
+    .vs-list { list-style: none; }
+    .vs-list li { font-size: 13px; margin-bottom: 12px; display: flex; align-items: flex-start; gap: 10px; color: #c4c1ce; }
+
+    /* Tarifas */
+    .pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; max-width: 1120px; margin: 0 auto; }
+    .price-card { background: var(--bg-card); border: 1px solid var(--border-line); border-radius: 20px; padding: 32px 24px; position: relative; display: flex; flex-direction: column; justify-content: space-between; }
+    .price-card.featured { border-color: var(--accent); box-shadow: 0 0 35px var(--accent-glow); background: #161424; }
+    .price-card .badge-rec { position: absolute; top: -12px; right: 20px; background: var(--accent); color: #fff; font-size: 10px; font-weight: 700; padding: 4px 10px; border-radius: 10px; text-transform: uppercase; }
+    .price-title { font-family: 'Syne', sans-serif; font-size: 20px; margin-bottom: 6px; color: #fff; }
+    .price-desc { font-size: 12px; color: var(--muted); margin-bottom: 14px; min-height: 38px; }
+    .price-amount { font-family: 'Syne', sans-serif; font-size: 32px; font-weight: 800; color: #fff; margin-bottom: 12px; }
+    .delivery-pill { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 700; color: #ffb830; background: rgba(255, 184, 48, 0.1); border: 1px solid rgba(255, 184, 48, 0.3); border-radius: 8px; padding: 4px 10px; margin-bottom: 16px; width: fit-content; }
+    .delivery-pill.fast { color: #25d366; background: rgba(37, 211, 102, 0.1); border-color: rgba(37, 211, 102, 0.3); }
+    .feature-list { list-style: none; margin-bottom: 25px; }
+    .feature-list li { font-size: 12px; color: #d6d3e0; margin-bottom: 10px; display: flex; align-items: flex-start; gap: 8px; }
+    .feature-list li::before { content: "✓"; color: var(--accent-light); font-weight: 700; flex-shrink: 0; }
+
+    /* Modal */
+    .modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); z-index: 100; display: none; align-items: center; justify-content: center; padding: 20px; }
+    .modal-backdrop.active { display: flex; animation: fadeIn 0.2s ease; }
+    .modal-box { background: #151322; border: 2px solid var(--border-accent); border-radius: 24px; max-width: 500px; width: 100%; padding: 30px; box-shadow: var(--shadow); position: relative; }
+    .modal-close { position: absolute; top: 18px; right: 20px; background: none; border: none; color: #888; font-size: 20px; cursor: pointer; }
+    .modal-plan-summary { background: #1c1a2e; padding: 14px 18px; border-radius: 12px; margin-bottom: 20px; }
+    .modal-plan-summary strong { font-family: 'Syne'; font-size: 16px; color: #fff; display: block; }
+    .modal-plan-summary span { font-size: 14px; color: var(--accent-light); font-weight: 700; }
+    .modal-total-bar { display: flex; justify-content: space-between; align-items: center; margin: 20px 0; border-top: 1px solid var(--border-line); padding-top: 15px; }
+    .modal-total-bar strong { font-family: 'Syne'; font-size: 20px; color: #fff; }
+
+    /* Simulador Duolingo */
+    .duo-card { background: #141221; border: 2px solid #27233f; border-radius: 24px; padding: 30px; box-shadow: 0 15px 45px rgba(0, 0, 0, 0.5); }
+    .duo-header { display: flex; align-items: center; justify-content: space-between; gap: 15px; margin-bottom: 20px; }
+    .duo-progress-bg { flex: 1; height: 12px; background: #231f38; border-radius: 10px; overflow: hidden; }
+    .duo-progress-bar { height: 100%; background: linear-gradient(90deg, #ff5500, #ff8c00); border-radius: 10px; transition: width 0.35s ease; }
+    .duo-streak { color: #ffb830; font-family: 'Syne', sans-serif; font-size: 11px; font-weight: 700; display: flex; align-items: center; gap: 4px; }
+    .duo-step { display: none; }
+    .duo-step.active { display: block; animation: fadeIn 0.25s ease-in-out; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+    .duo-question { font-family: 'Syne', sans-serif; color: #fff; font-size: 19px; margin-bottom: 6px; }
+    .duo-hint { color: #8f8ca1; font-size: 12px; margin-bottom: 18px; }
+    .duo-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
+    .duo-chip { background: #1f1c32; border: 2px solid #312d4f; border-bottom-width: 4px; color: #fff; padding: 8px 14px; border-radius: 12px; font-size: 12px; font-weight: 700; cursor: pointer; transition: all 0.15s ease; }
+    .duo-chip.selected { border-color: var(--accent); background: rgba(255, 85, 0, 0.15); color: #ff944d; transform: translateY(2px); border-bottom-width: 2px; }
+    .slider-wrapper { background: #1c1a2e; padding: 16px 18px; border-radius: 14px; margin-bottom: 22px; }
+    .duo-range { width: 100%; accent-color: var(--accent); cursor: pointer; }
+    .slider-current-val { text-align: right; color: var(--accent-light); font-family: 'Syne', sans-serif; font-weight: 800; font-size: 20px; margin-top: 6px; }
+    .duo-btn-next { width: 100%; background: var(--accent); border: none; border-bottom: 4px solid #b33600; color: #fff; padding: 14px; border-radius: 14px; font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700; cursor: pointer; }
+    .duo-btn-back { background: #252238; border: none; border-bottom: 4px solid #14121f; color: #bbb; padding: 14px 20px; border-radius: 14px; font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; cursor: pointer; }
+    .duo-nav-buttons { display: flex; gap: 10px; margin-top: 14px; }
+    .duo-options-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(85px, 1fr)); gap: 8px; margin-bottom: 22px; }
+    .duo-choice-card { background: #1c1a2e; border: 2px solid #2f2a4a; border-bottom: 4px solid #2f2a4a; color: #fff; padding: 12px 6px; border-radius: 14px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+    .duo-choice-card.selected { border-color: var(--accent); border-bottom-width: 2px; background: rgba(255, 85, 0, 0.12); transform: translateY(2px); }
+    .choice-pct { font-family: 'Syne'; font-size: 20px; font-weight: 800; color: var(--accent-light); }
+    .choice-sub { font-size: 10px; color: #9f9cae; }
+    .duo-service-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
+    .duo-service-item { background: #1c1a2e; border: 2px solid #2f2a4a; border-bottom: 4px solid #2f2a4a; padding: 12px 14px; border-radius: 14px; display: flex; align-items: center; gap: 12px; cursor: pointer; }
+    .duo-service-item.selected { border-color: var(--accent); border-bottom-width: 2px; background: rgba(255, 85, 0, 0.12); transform: translateY(2px); }
+    .svc-icon { font-size: 22px; }
+    .svc-info { flex: 1; }
+    .svc-info strong { display: block; color: #fff; font-size: 13px; font-family: 'Syne'; }
+    .svc-info span { font-size: 11px; color: #8e8ba0; }
+    .svc-price { font-family: 'Syne'; font-size: 13px; font-weight: 700; color: var(--accent-light); }
+    .victory-header { text-align: center; margin-bottom: 18px; }
+    .trophy-badge { font-size: 44px; margin-bottom: 6px; }
+    .victory-metric-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+    .vic-card { background: #1c1a2e; border: 1px solid #2f2a4a; padding: 14px; border-radius: 14px; text-align: center; }
+    .vic-card span { font-size: 11px; color: #8f8ca1; display: block; margin-bottom: 4px; }
+    .vic-card strong { font-family: 'Syne'; font-size: 17px; color: #fff; }
+    .vic-roi-banner { background: rgba(37, 211, 102, 0.08); border: 2px solid var(--green); border-bottom-width: 4px; border-radius: 16px; padding: 14px 18px; display: flex; align-items: center; gap: 14px; margin-bottom: 22px; }
+    .roi-digit { font-family: 'Syne'; font-size: 32px; font-weight: 800; color: var(--green); line-height: 1; }
+    .roi-explanation strong { font-size: 13px; color: #fff; display: block; font-family: 'Syne'; margin-bottom: 3px; }
+    .roi-explanation p { font-size: 11px; color: #9f9cb0; line-height: 1.4; margin: 0; }
+    .duo-btn-cta { display: block; width: 100%; background: var(--green); border-bottom: 4px solid var(--green-dark); color: #fff; padding: 14px; border-radius: 14px; font-family: 'Syne'; font-size: 14px; font-weight: 800; text-align: center; }
+    .duo-btn-restart { background: none; border: none; color: #7b7891; font-size: 12px; margin-top: 12px; cursor: pointer; display: block; width: 100%; text-align: center; }
+
+    #localConfettiCanvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 9999; }
+    footer { background: #06060a; color: #888694; padding: 26px 0; font-size: 11px; border-top: 1px solid var(--border-line); }
+    footer .footer-inner { display: flex; justify-content: space-between; align-items: center; }
+
+    /* Orden invertido para pantallas de celular */
+    @media (max-width: 950px) {
+      .hero { padding: 95px 0 50px; }
+      .hero-inner { grid-template-columns: 1fr; gap: 24px; }
+      .hero-card-col { order: -1; }
+      .hero-text-col { order: 1; text-align: center; }
+      .hero-actions { justify-content: center; }
+      .metrics { max-width: 400px; margin: 0 auto; }
+      .pricing-grid, .gallery-grid, .vs-grid { grid-template-columns: 1fr; }
+      .nav { display: none; }
+      .topbar { padding: 0 16px; }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="localConfettiCanvas"></canvas>
+
+  <header class="topbar">
+    <a class="brand" href="#inicio">L<span>I</span>NA R<span>A</span>CHEZ<span class="brand-sub">OPTIMIZACIÓN INMOBILIARIA IA</span></a>
+    <nav class="nav">
+      <a href="#galeria">Casos Reales</a>
+      <a href="#comparativa">¿Por qué con IA?</a>
+      <a href="#paquetes">Tarifas</a>
+      <a href="#cotizador">Simulador ROI</a>
+    </nav>
+    <div style="display:flex; gap:12px; align-items:center;">
+      <div class="currency-pill">
+        <button class="currency-btn active" id="btnCOP" onclick="setCurrency('COP')">COP</button>
+        <button class="currency-btn" id="btnUSD" onclick="setCurrency('USD')">USD</button>
+      </div>
+      <a class="btn btn-primary" href="https://wa.me/573114333030?text=Hola%20Lina%2C%20quiero%20enviarte%20un%20inmueble%20para%20auditor%C3%ADa%20express" target="_blank">Auditoría Gratis ↗</a>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero con Comparador Arriba en Móvil -->
+    <section class="hero" id="inicio">
+      <div class="container hero-inner">
+        <div class="hero-text-col">
+          <span class="badge">Acelera tus Ventas y Protege Comisiones</span>
+          <h1>Un inmueble estancado no pierde valor: <span>pierde tu comisión.</span></h1>
+          <p>En portales, el 85% de compradores descartan un aviso en 3 segundos por fotos oscuras o vacías. Transformo tus fotos de celular en anuncios fotorrealistas con video cinematográfico en 24 horas, acelerando visitas antes de que el dueño busque a otra inmobiliaria.</p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="https://wa.me/573114333030?text=Hola%20Lina%2C%20te%20comparto%20el%20enlace%20de%20mi%20inmueble%20para%20revisar%20sus%20fotos" target="_blank">Auditar mi publicación gratis por WhatsApp →</a>
+            <a class="btn btn-secondary" href="#paquetes">Ver tarifas y planes</a>
+          </div>
+          <div class="metrics">
+            <div class="metric"><strong>+200%</strong><span>Más consultas</span></div>
+            <div class="metric"><strong>12-24h</strong><span>Entrega recurrente</span></div>
+            <div class="metric"><strong>100%</strong><span>Ajustes incluidos</span></div>
+          </div>
+        </div>
+
+        <div class="hero-card-col">
+          <div class="hero-card">
+            <div class="before-after-wrapper compare-container">
+              <img class="compare-img" src="DESPUES 2 - sin maleta azul.png" alt="Foto optimizada con IA después">
+              <img class="compare-img img-after" src="ANTES 1.jpg" alt="Foto original antes de optimizar">
+              <div class="slider-handle"><div class="slider-circle">↔</div></div>
+              <span class="tag-hint tag-b">Original</span>
+              <span class="tag-hint tag-a">Con Inteligencia Artificial</span>
+            </div>
+            <p style="text-align:center; font-size:11px; color:var(--muted); margin-top:10px;">👈 Desliza la barra central con tu dedo 👉</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Galería de Casos Reales -->
+    <section class="section" id="galeria">
+      <div class="container">
+        <div class="section-head">
+          <div class="section-label">Resultados Comprobados</div>
+          <h2>Transformaciones que multiplican visitas</h2>
+          <p>Desliza en cualquiera de los ambientes para ver cómo recuperamos la luz natural, amoblamos cuartos vacíos y preparamos el inmueble para la venta.</p>
+        </div>
+        <div class="gallery-grid">
+          <div class="gallery-card">
+            <div class="before-after-wrapper compare-container">
+              <img class="compare-img" src="SALA DESPUES.png" alt="Sala con IA">
+              <img class="compare-img img-after" src="SALA ANTES.png" alt="Sala original">
+              <div class="slider-handle"><div class="slider-circle">↔</div></div>
+              <span class="tag-hint tag-b">Original</span><span class="tag-hint tag-a">Con IA</span>
+            </div>
+            <div class="gallery-info">
+              <h4>Sala: Iluminación y Textura</h4>
+              <p>Luces cenitales recuperadas, piso laminado nítido y balance térmico natural.</p>
+            </div>
+          </div>
+          <div class="gallery-card">
+            <div class="before-after-wrapper compare-container">
+              <img class="compare-img" src="COCINA DESPUES.png" alt="Cocina con IA">
+              <img class="compare-img img-after" src="COCINA ANTES.png" alt="Cocina original">
+              <div class="slider-handle"><div class="slider-circle">↔</div></div>
+              <span class="tag-hint tag-b">Original</span><span class="tag-hint tag-a">Con IA</span>
+            </div>
+            <div class="gallery-info">
+              <h4>Cocina: Ambientación y Staging</h4>
+              <p>Decoración fotorrealista de mesón y eliminación de reflejos quemados.</p>
+            </div>
+          </div>
+          <div class="gallery-card">
+            <div class="before-after-wrapper compare-container">
+              <img class="compare-img" src="HABITACION DESPUES.jpg" alt="Habitación con IA">
+              <img class="compare-img img-after" src="HABITACION ANTES.jpg" alt="Habitación original">
+              <div class="slider-handle"><div class="slider-circle">↔</div></div>
+              <span class="tag-hint tag-b">Original</span><span class="tag-hint tag-a">Con IA</span>
+            </div>
+            <div class="gallery-info">
+              <h4>Habitación: Claridad y Despeje</h4>
+              <p>Retiro de desorden en esquinas, iluminación cálida y ambiente acogedor.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Comparativa: Fotógrafo vs Optimización IA -->
+    <section class="section" id="comparativa" style="background:#0d0c16;">
+      <div class="container">
+        <div class="section-head">
+          <div class="section-label">Eficiencia Operativa</div>
+          <h2>¿Por qué los mejores brokers no usan fotógrafos presenciales?</h2>
+          <p>Ahorra días enteros coordinando citas con propietarios o porterías. Todo se gestiona desde tu celular.</p>
+        </div>
+        <div class="vs-grid">
+          <div class="vs-card">
+            <h3 class="vs-title" style="color:#ff6b6b;">Fotografía Presencial Tradicional</h3>
+            <ul class="vs-list">
+              <li>❌ Tienes que pedir llaves y cuadrar agendas con el inquilino o dueño.</li>
+              <li>❌ El fotógrafo cobra viáticos y entrega en 5 a 7 días hábiles.</li>
+              <li>❌ Si el inmueble está vacío, sigue viéndose frío y sin muebles.</li>
+              <li>❌ Costos elevados por cada propiedad individual ($250.000 a $400.000 COP).</li>
+            </ul>
+          </div>
+          <div class="vs-card winner">
+            <h3 class="vs-title" style="color:var(--accent-light);">Optimización Integral con IA (Lina Rachez)</h3>
+            <ul class="vs-list">
+              <li>✅ <strong>Tomas las fotos con tu celular</strong> en tu visita de captación y me las envías por WhatsApp.</li>
+              <li>✅ <strong>Entrega exprés en 12 a 24 horas</strong> para publicar el anuncio el mismo día.</li>
+              <li>✅ <strong>Amoblado virtual fotorrealista y video vertical incluidos</strong> para destacar en redes.</li>
+              <li>✅ <strong>Garantía de satisfacción:</strong> ajustes de mobiliario y luz sin costo adicional.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tarifas Transparentes -->
+    <section class="section" id="paquetes">
+      <div class="container">
+        <div class="section-head">
+          <div class="section-label">Planes Todo Incluido</div>
+          <h2>Invierte una fracción mínima de tu comisión</h2>
+          <p>Cada paquete incluye fotos profesionales, amoblado de ambientes clave y video de recorrido.</p>
+        </div>
+        <div class="pricing-grid">
+          <!-- Pack 1 -->
+          <div class="price-card">
+            <div>
+              <h3 class="price-title">Plan Individual</h3>
+              <p class="price-desc">Solución completa para reactivar 1 propiedad puntual estancada.</p>
+              <div class="price-amount" id="p1-main">$120.000 COP</div>
+              <div class="delivery-pill">⏱ Entrega en 48 a 72 horas</div>
+              <ul class="feature-list">
+                <li><strong>1 Inmueble completo</strong></li>
+                <li><strong>Hasta 8 fotos optimizadas en HD</strong></li>
+                <li><strong>Amoblado Virtual fotorrealista</strong> (1 o 2 ambientes)</li>
+                <li><strong>1 Video cinematográfico vertical</strong> para Reels y TikTok</li>
+                <li>Limpieza de cables, cielo azul y corrección de sombras</li>
+                <li>Garantía de ajustes de mobiliario incluida</li>
+              </ul>
+            </div>
+            <button class="btn btn-secondary" onclick="openOrderModal('p1')">Elegir 1 Inmueble →</button>
+          </div>
+
+          <!-- Pack 2 -->
+          <div class="price-card featured">
+            <span class="badge-rec">Más vendido</span>
+            <div>
+              <h3 class="price-title">Plan Dúo Comercial</h3>
+              <p class="price-desc">Para brokers activos con 2 propiedades clave en rotación.</p>
+              <div class="price-amount" id="p2-main">$210.000 COP</div>
+              <div class="delivery-pill">⏱ Entrega en 48 a 72 horas</div>
+              <ul class="feature-list">
+                <li><strong>2 Inmuebles completos</strong> ($105.000 COP c/u)</li>
+                <li><strong>Hasta 16 fotos optimizadas totales</strong> (8 por propiedad)</li>
+                <li><strong>Amoblado Virtual incluido</strong> en los ambientes necesarios</li>
+                <li><strong>2 Videos cinematográficos de recorrido</strong> (1 por inmueble)</li>
+                <li>Limpieza digital y retiro de desorden visible</li>
+                <li>Formato listo para portales y pauta digital</li>
+              </ul>
+            </div>
+            <button class="btn btn-primary" onclick="openOrderModal('p2')">Elegir 2 Inmuebles →</button>
+          </div>
+
+          <!-- Pack 3 -->
+          <div class="price-card">
+            <div>
+              <h3 class="price-title">Plan Partner Mensual</h3>
+              <p class="price-desc">Para agencias y brokers que delegan su inventario continuo.</p>
+              <div class="price-amount" id="p3-main">$390.000 COP/mes</div>
+              <div class="delivery-pill fast">⚡ Entrega exprés en 12 a 24 horas</div>
+              <ul class="feature-list">
+                <li><strong>4 Inmuebles al mes</strong> (1 por semana)</li>
+                <li><strong>Hasta 32 fotos optimizadas mensuales</strong></li>
+                <li><strong>4 Videos cinematográficos verticales</strong></li>
+                <li><strong>Amoblado virtual y decluttering ilimitado</strong></li>
+                <li><strong>Prioridad absoluta: entrega en 12 a 24 horas</strong></li>
+                <li>Canal VIP directo por WhatsApp para ajustes inmediatos</li>
+              </ul>
+            </div>
+            <button class="btn btn-secondary" onclick="openOrderModal('p3')">Contratar Plan Mensual →</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Modal Emergente -->
+    <div class="modal-backdrop" id="orderModal">
+      <div class="modal-box">
+        <button class="modal-close" onclick="closeOrderModal()">✕</button>
+        <h3 style="font-family:'Syne'; font-size:20px; color:#fff; margin-bottom:6px;">Confirmar Solución Visual</h3>
+        <p style="font-size:12px; color:var(--muted); margin-bottom:16px;">Revisa tu selección y coordina el envío de tus fotos directamente por WhatsApp:</p>
+        <div class="modal-plan-summary">
+          <strong id="modalPlanName">Plan Dúo Comercial (2 Inmuebles)</strong>
+          <span id="modalPlanPrice">$210.000 COP</span>
+        </div>
+        <div class="modal-total-bar">
+          <span style="font-size:13px; color:var(--muted);">Total a Invertir:</span>
+          <strong id="modalTotalPrice">$210.000 COP</strong>
+        </div>
+        <a class="btn btn-primary" id="modalWaSubmit" href="#" target="_blank" style="width:100%; font-size:14px; padding:14px;">
+          Coordinar Pedido por WhatsApp 📲
+        </a>
+      </div>
+    </div>
+
+    <!-- Simulador Duolingo -->
+    <section class="section" id="cotizador" style="background: #08080c; position: relative;">
+      <div class="container" style="max-width: 720px;">
+        <div class="section-head" style="margin-bottom: 30px;">
+          <div class="section-label">Simulador Financiero</div>
+          <h2>Calcula tu Retorno en 30 Segundos</h2>
+          <p>Comprueba qué porcentaje mínimo de tu comisión representa asegurar visitas inmediatas.</p>
+        </div>
+        <div class="duo-card">
+          <div class="duo-header">
+            <div class="duo-progress-bg">
+              <div class="duo-progress-bar" id="duoProgressBar" style="width: 33%;"></div>
+            </div>
+            <div class="duo-streak">⚡ <b id="stepCounter">PASO 1 DE 3</b></div>
+          </div>
+
+          <!-- PASO 1 -->
+          <div class="duo-step active" id="step1">
+            <h3 class="duo-question">¿Cuánto vale el inmueble que quieres vender?</h3>
+            <p class="duo-hint">Selecciona un monto sugerido o ajusta la barra:</p>
+            <div class="duo-chips" id="propChips"></div>
+            <div class="slider-wrapper">
+              <input type="range" id="propertyValue" min="150000000" max="1500000000" step="50000000" value="400000000" oninput="onSliderMove()" class="duo-range">
+              <div class="slider-current-val" id="displayPropertyValue">$400.000.000 COP</div>
+            </div>
+            <button class="duo-btn-next" onclick="goToStep(2)">Continuar ➜</button>
+          </div>
+
+          <!-- PASO 2 -->
+          <div class="duo-step" id="step2">
+            <h3 class="duo-question">¿Qué comisión negociaste con el propietario?</h3>
+            <p class="duo-hint">Elige tu porcentaje habitual de honorarios:</p>
+            <div class="duo-options-grid">
+              <button class="duo-choice-card" onclick="selectComm(0.01, this)"><span class="choice-pct">1%</span><span class="choice-sub">Compartida</span></button>
+              <button class="duo-choice-card" onclick="selectComm(0.02, this)"><span class="choice-pct">2%</span><span class="choice-sub">Corporativo</span></button>
+              <button class="duo-choice-card selected" onclick="selectComm(0.03, this)"><span class="choice-pct">3%</span><span class="choice-sub">Estándar</span></button>
+              <button class="duo-choice-card" onclick="selectComm(0.04, this)"><span class="choice-pct">4%</span><span class="choice-sub">Exclusiva</span></button>
+              <button class="duo-choice-card" onclick="selectComm(0.05, this)"><span class="choice-pct">5%</span><span class="choice-sub">Campestre</span></button>
+            </div>
+            <div class="duo-nav-buttons">
+              <button class="duo-btn-back" onclick="goToStep(1)">← Atrás</button>
+              <button class="duo-btn-next" onclick="goToStep(3)">Continuar ➜</button>
+            </div>
+          </div>
+
+          <!-- PASO 3 -->
+          <div class="duo-step" id="step3">
+            <h3 class="duo-question">¿Qué solución visual necesitas?</h3>
+            <p class="duo-hint">Elige el servicio adecuado para tu volumen:</p>
+            <div class="duo-service-list">
+              <div class="duo-service-item" onclick="selectSimService('p1', this)">
+                <div class="svc-icon">✨</div>
+                <div class="svc-info">
+                  <strong>Plan Individual (1 Inmueble Completo)</strong>
+                  <span>8 fotos + amoblado + 1 video corto. Entrega 48-72h.</span>
+                </div>
+                <div class="svc-price" id="svc1-price">$120.000 COP</div>
+              </div>
+              <div class="duo-service-item selected" onclick="selectSimService('p2', this)">
+                <div class="svc-icon">🛋️</div>
+                <div class="svc-info">
+                  <strong>Plan Dúo Comercial (2 Inmuebles Completos)</strong>
+                  <span>16 fotos + amoblado + 2 videos. Entrega 48-72h.</span>
+                </div>
+                <div class="svc-price" id="svc2-price">$210.000 COP</div>
+              </div>
+              <div class="duo-service-item" onclick="selectSimService('p3', this)">
+                <div class="svc-icon">🌟</div>
+                <div class="svc-info">
+                  <strong>Plan Partner Mensual (4 Inmuebles al mes)</strong>
+                  <span>Hasta 32 fotos + amoblado + 4 videos. Entrega exprés 12-24h.</span>
+                </div>
+                <div class="svc-price" id="svc3-price">$390.000 COP/mes</div>
+              </div>
+            </div>
+            <div class="duo-nav-buttons">
+              <button class="duo-btn-back" onclick="goToStep(2)">← Atrás</button>
+              <button class="duo-btn-next" onclick="showVictory()">¡Ver Mi Retorno! 🚀</button>
+            </div>
+          </div>
+
+          <!-- RESULTADO -->
+          <div class="duo-step" id="stepResult">
+            <div class="victory-header">
+              <div class="trophy-badge">🏆</div>
+              <h3 style="font-family:'Syne'; font-size:26px; color:#fff; margin-bottom:6px;">¡Comisión Asegurada!</h3>
+              <p style="color:#a8a6b8; font-size:13px;">Esto es lo que ganas frente a tu mínima inversión:</p>
+            </div>
+            <div class="victory-metric-grid">
+              <div class="vic-card">
+                <span>Tu comisión estimada</span>
+                <strong id="vicCommission">$12.000.000 COP</strong>
+              </div>
+              <div class="vic-card">
+                <span>Inversión en imagen</span>
+                <strong id="vicCost" style="color:var(--accent-light);">$210.000 COP</strong>
+              </div>
+            </div>
+            <div class="vic-roi-banner">
+              <div class="roi-digit" id="vicRoi">57x</div>
+              <div class="roi-explanation">
+                <strong id="vicPercentTag">Inviertes solo el 1.7% de tu comisión</strong>
+                <p>Aceleras visitas, proteges tu exclusividad y evitas rebajas de millones en la negociación final.</p>
+              </div>
+            </div>
+            <div>
+              <a class="duo-btn-cta" id="duoWaButton" href="#" target="_blank">Asegurar esta comisión por WhatsApp 📲</a>
+              <button class="duo-btn-restart" onclick="goToStep(1)">↻ Modificar datos</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-inner">
+      <div>© 2026 Lina Rachez · Optimización Visual Inmobiliaria con IA</div>
+      <div><a href="https://wa.me/573114333030" target="_blank">WhatsApp de Contacto</a> · <a href="mailto:linahmgomez@gmail.com">linahmgomez@gmail.com</a></div>
+    </div>
+  </footer>
+
+  <script>
+    let currentCurrency = 'COP';
+    let chosenValue = 400000000;
+    let chosenCommRate = 0.03;
+    let chosenService = 'p2';
+
+    const dataMatrix = {
+      COP: {
+        p1: 120000, p2: 210000, p3: 390000,
+        suf: ' COP',
+        min: 150000000, max: 1500000000, step: 50000000, def: 400000000,
+        chips: [200000000, 400000000, 700000000, 1000000000]
+      },
+      USD: {
+        p1: 30, p2: 55, p3: 100,
+        suf: ' USD',
+        min: 50000, max: 1000000, step: 25000, def: 150000,
+        chips: [100000, 200000, 400000, 750000]
+      }
+    };
+
+    const planNames = {
+      p1: 'Plan Individual (1 Inmueble Completo)',
+      p2: 'Plan Dúo Comercial (2 Inmuebles Completos)',
+      p3: 'Plan Partner Mensual (4 Inmuebles al mes + Entrega 12-24h)'
+    };
+
+    let activeModalPlan = 'p2';
+
+    function openOrderModal(planKey) {
+      activeModalPlan = planKey;
+      const d = dataMatrix[currentCurrency];
+      document.getElementById('modalPlanName').textContent = planNames[planKey];
+      const priceText = currentCurrency === 'COP'
+        ? '$' + d[planKey].toLocaleString('es-CO') + ' COP'
+        : '$' + d[planKey] + ' USD';
+      document.getElementById('modalPlanPrice').textContent = priceText;
+      document.getElementById('modalTotalPrice').textContent = priceText;
+
+      let msg = `Hola Lina, quiero contratar el *${planNames[activeModalPlan]}* por *${priceText}*. ¿Cómo te comparto el material?`;
+      document.getElementById('modalWaSubmit').href = `https://wa.me/573114333030?text=${encodeURIComponent(msg)}`;
+      document.getElementById('orderModal').classList.add('active');
+    }
+
+    function closeOrderModal() {
+      document.getElementById('orderModal').classList.remove('active');
+    }
+
+    function initAllSliders() {
+      document.querySelectorAll('.compare-container').forEach(wrap => {
+        const handleBar = wrap.querySelector('.slider-handle');
+        const afterLayer = wrap.querySelector('.img-after');
+        if (!handleBar || !afterLayer) return;
+        let activeSlide = false;
+
+        const setPos = (clientX) => {
+          const rect = wrap.getBoundingClientRect();
+          let pos = (clientX - rect.left) / rect.width;
+          pos = Math.max(0, Math.min(1, pos));
+          const pct = pos * 100;
+          handleBar.style.left = pct + '%';
+          afterLayer.style.clipPath = `polygon(0 0, ${pct}% 0, ${pct}% 100%, 0 100%)`;
+        };
+
+        wrap.addEventListener('mousedown', (e) => { activeSlide = true; setPos(e.clientX); });
+        window.addEventListener('mouseup', () => activeSlide = false);
+        window.addEventListener('mousemove', (e) => { if (activeSlide) setPos(e.clientX); });
+
+        wrap.addEventListener('touchstart', (e) => {
+          activeSlide = true;
+          if (e.touches[0]) setPos(e.touches[0].clientX);
+        }, { passive: true });
+        window.addEventListener('touchend', () => activeSlide = false);
+        window.addEventListener('touchmove', (e) => {
+          if (activeSlide && e.touches[0]) setPos(e.touches[0].clientX);
+        }, { passive: true });
+      });
+    }
+
+    function renderChips() {
+      const d = dataMatrix[currentCurrency];
+      const chipContainer = document.getElementById('propChips');
+      chipContainer.innerHTML = '';
+      d.chips.forEach(val => {
+        const btn = document.createElement('button');
+        btn.className = 'duo-chip' + (val === chosenValue ? ' selected' : '');
+        btn.textContent = currentCurrency === 'COP' ? `$${val / 1000000}M` : `$${val / 1000}k`;
+        btn.onclick = () => {
+          chosenValue = val;
+          document.getElementById('propertyValue').value = val;
+          onSliderMove();
+          renderChips();
+        };
+        chipContainer.appendChild(btn);
+      });
+    }
+
+    function setCurrency(curr) {
+      currentCurrency = curr;
+      const d = dataMatrix[curr];
+
+      document.getElementById('btnCOP').classList.toggle('active', curr === 'COP');
+      document.getElementById('btnUSD').classList.toggle('active', curr === 'USD');
+
+      if (curr === 'COP') {
+        document.getElementById('p1-main').textContent = '$120.000 COP';
+        document.getElementById('p2-main').textContent = '$210.000 COP';
+        document.getElementById('p3-main').textContent = '$390.000 COP/mes';
+        document.getElementById('svc1-price').textContent = '$120.000 COP';
+        document.getElementById('svc2-price').textContent = '$210.000 COP';
+        document.getElementById('svc3-price').textContent = '$390.000 COP/mes';
+      } else {
+        document.getElementById('p1-main').textContent = '$30 USD';
+        document.getElementById('p2-main').textContent = '$55 USD';
+        document.getElementById('p3-main').textContent = '$100 USD/mes';
+        document.getElementById('svc1-price').textContent = '$30 USD';
+        document.getElementById('svc2-price').textContent = '$55 USD';
+        document.getElementById('svc3-price').textContent = '$100 USD/mes';
+      }
+
+      const s = document.getElementById('propertyValue');
+      s.min = d.min;
+      s.max = d.max;
+      s.step = d.step;
+      s.value = d.def;
+      chosenValue = d.def;
+
+      onSliderMove();
+      renderChips();
+
+      if (document.getElementById('orderModal').classList.contains('active')) {
+        openOrderModal(activeModalPlan);
+      }
+      if (document.getElementById('stepResult').classList.contains('active')) {
+        showVictory(false);
+      }
+    }
+
+    function onSliderMove() {
+      chosenValue = parseInt(document.getElementById('propertyValue').value, 10);
+      const formatted = currentCurrency === 'COP' 
+        ? '$' + chosenValue.toLocaleString('es-CO') + dataMatrix.COP.suf
+        : '$' + chosenValue.toLocaleString('en-US') + dataMatrix.USD.suf;
+      document.getElementById('displayPropertyValue').textContent = formatted;
+    }
+
+    function goToStep(stepNum) {
+      document.querySelectorAll('.duo-step').forEach(s => s.classList.remove('active'));
+      document.getElementById('step' + stepNum).classList.add('active');
+      const pct = (stepNum / 3) * 100;
+      document.getElementById('duoProgressBar').style.width = pct + '%';
+      document.getElementById('stepCounter').textContent = `PASO ${stepNum} DE 3`;
+    }
+
+    function selectComm(rate, btn) {
+      chosenCommRate = rate;
+      document.querySelectorAll('.duo-choice-card').forEach(c => c.classList.remove('selected'));
+      btn.classList.add('selected');
+    }
+
+    function selectSimService(svcKey, card) {
+      chosenService = svcKey;
+      document.querySelectorAll('.duo-service-item').forEach(c => c.classList.remove('selected'));
+      card.classList.add('selected');
+    }
+
+    function fireConfetti() {
+      const canvas = document.getElementById('localConfettiCanvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+
+      const particles = Array.from({ length: 65 }, () => ({
+        x: Math.random() * canvas.width,
+        y: -10,
+        r: Math.random() * 6 + 4,
+        d: Math.random() * 40 + 10,
+        color: ['#ff5500', '#ff8c00', '#25d366', '#c08bff', '#ffffff'][Math.floor(Math.random() * 5)],
+        tilt: Math.random() * 10 - 10,
+        tiltAngleIncremental: (Math.random() * 0.07) + .05,
+        tiltAngle: 0
+      }));
+
+      let start = performance.now();
+      function loop(now) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particles.forEach(p => {
+          p.tiltAngle += p.tiltAngleIncremental;
+          p.y += (Math.cos(p.d) + 3 + p.r / 2) / 2;
+          p.tilt = Math.sin(p.tiltAngle - (p.r / 3)) * 15;
+          ctx.beginPath();
+          ctx.lineWidth = p.r;
+          ctx.strokeStyle = p.color;
+          ctx.moveTo(p.x + p.tilt + (p.r / 4), p.y);
+          ctx.lineTo(p.x + p.tilt, p.y + p.tilt + (p.r / 4));
+          ctx.stroke();
+        });
+        if (now - start < 2500) {
+          requestAnimationFrame(loop);
+        } else {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+      }
+      requestAnimationFrame(loop);
+    }
+
+    function showVictory(triggerConfetti = true) {
+      const d = dataMatrix[currentCurrency];
+      let investCost = d[chosenService];
+
+      const commission = chosenValue * chosenCommRate;
+      const roi = Math.max(1, Math.round(commission / investCost));
+      const percentOfComm = ((investCost / commission) * 100).toFixed(1);
+
+      const fmtProp = currentCurrency === 'COP'
+        ? '$' + chosenValue.toLocaleString('es-CO') + d.suf
+        : '$' + chosenValue.toLocaleString('en-US') + d.suf;
+
+      const fmtComm = currentCurrency === 'COP'
+        ? '$' + Math.round(commission).toLocaleString('es-CO') + d.suf
+        : '$' + Math.round(commission).toLocaleString('en-US') + d.suf;
+
+      const fmtCost = currentCurrency === 'COP'
+        ? '$' + investCost.toLocaleString('es-CO') + d.suf
+        : '$' + investCost + d.suf;
+
+      document.getElementById('vicCommission').textContent = fmtComm;
+      document.getElementById('vicCost').textContent = fmtCost;
+      document.getElementById('vicRoi').textContent = roi + 'x';
+      document.getElementById('vicPercentTag').textContent = `Inviertes solo el ${percentOfComm}% de tu comisión`;
+
+      const commLabel = Math.round(chosenCommRate * 100) + '%';
+      const msg = encodeURIComponent(
+        `Hola Lina, calculé el retorno para un inmueble de ${fmtProp}. Mi comisión estimada (${commLabel}) es de ${fmtComm} e invertiría ${fmtCost} (retorno de ${roi}x). Quiero una auditoría express.`
+      );
+      document.getElementById('duoWaButton').href = `https://wa.me/573114333030?text=${msg}`;
+
+      document.querySelectorAll('.duo-step').forEach(s => s.classList.remove('active'));
+      document.getElementById('stepResult').classList.add('active');
+      document.getElementById('duoProgressBar').style.width = '100%';
+      document.getElementById('stepCounter').textContent = 'COMPLETADO';
+
+      if (triggerConfetti) {
+        fireConfetti();
+      }
+    }
+
+    onSliderMove();
+    renderChips();
+    initAllSliders();
+  </script>
+</body>
+</html>
